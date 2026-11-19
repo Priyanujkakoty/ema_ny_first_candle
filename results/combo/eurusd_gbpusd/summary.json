@@ -1,0 +1,141 @@
+{
+  "tag": "eurusd_gbpusd",
+  "pairs": [
+    "EURUSD",
+    "GBPUSD"
+  ],
+  "window": {
+    "start": "2016-01-01",
+    "end": "2026-11-03"
+  },
+  "portfolio": {
+    "trades": 14816,
+    "trading_days": 2814,
+    "trades_per_day": 5.265103056147832,
+    "avg_R": 0.4696826403887689,
+    "total_R": 6958.818,
+    "max_dd_R": -49.419999999995525,
+    "calmar": 140.8097531363948,
+    "t": 19.44682851326741,
+    "daily_sd_R": 8.766703306991106,
+    "max_concurrent": 6,
+    "worst_simultaneous_float_R": -5.03581363256714,
+    "trades_per_day_median": 6.0,
+    "trades_per_day_max": 6
+  },
+  "strategies": {
+    "ny_orb": {
+      "trades": 5329,
+      "avg_R": 0.4347885156689811,
+      "total_R": 2316.9880000000003,
+      "max_dd_R": -53.74699999999939,
+      "calmar": 43.10915958100036,
+      "t": 9.626167531865342,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "london_orb": {
+      "trades": 5499,
+      "avg_R": 0.6993578832515003,
+      "total_R": 3845.7690000000002,
+      "max_dd_R": -37.48899999999912,
+      "calmar": 102.58393128651312,
+      "t": 14.81204921686102,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "prev_level": {
+      "trades": 3988,
+      "avg_R": 0.1996140922768305,
+      "total_R": 796.061,
+      "max_dd_R": -8.480999999999938,
+      "calmar": 93.86404905082017,
+      "t": 17.252889876971192,
+      "positive_years": 11,
+      "n_years": 11
+    }
+  },
+  "per_pair_strategy": {
+    "ny_orb:EURUSD": {
+      "trades": 2651,
+      "avg_R": 0.4117732930969446,
+      "total_R": 1091.611,
+      "max_dd_R": -36.54299999999999,
+      "calmar": 29.871959061927054,
+      "t": 6.4225478216196255,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "ny_orb:GBPUSD": {
+      "trades": 2678,
+      "avg_R": 0.45757169529499625,
+      "total_R": 1225.377,
+      "max_dd_R": -38.93299999999999,
+      "calmar": 31.47399378419336,
+      "t": 7.188872211868814,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "london_orb:EURUSD": {
+      "trades": 2747,
+      "avg_R": 0.6293480160174736,
+      "total_R": 1728.819,
+      "max_dd_R": -25.281999999999925,
+      "calmar": 68.38141760936655,
+      "t": 9.876930817031,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "london_orb:GBPUSD": {
+      "trades": 2752,
+      "avg_R": 0.7692405523255813,
+      "total_R": 2116.95,
+      "max_dd_R": -30.062999999999874,
+      "calmar": 70.4171240395173,
+      "t": 11.041434040379569,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "prev_level:EURUSD": {
+      "trades": 1978,
+      "avg_R": 0.19049089989888776,
+      "total_R": 376.791,
+      "max_dd_R": -7.184000000000054,
+      "calmar": 52.44863585746063,
+      "t": 11.811400994950167,
+      "positive_years": 11,
+      "n_years": 11
+    },
+    "prev_level:GBPUSD": {
+      "trades": 2010,
+      "avg_R": 0.20859203980099503,
+      "total_R": 419.27,
+      "max_dd_R": -8.191999999999894,
+      "calmar": 51.18041992187566,
+      "t": 12.575758917107178,
+      "positive_years": 11,
+      "n_years": 11
+    }
+  },
+  "strategy_correlation": {
+    "ny_orb-london_orb": 0.17867389116212687,
+    "ny_orb-prev_level": 0.2628707776209662,
+    "london_orb-prev_level": 0.45999461784536
+  },
+  "pair_correlation": {
+    "EURUSD-GBPUSD": 0.329070947902731
+  },
+  "yearly": {
+    "2016": 545.05,
+    "2017": 615.364,
+    "2018": 675.759,
+    "2019": 684.343,
+    "2020": 652.235,
+    "2021": 566.0219999999999,
+    "2022": 739.684,
+    "2023": 784.5339999999999,
+    "2024": 477.608,
+    "2025": 714.058,
+    "2026": 504.16100000000006
+  }
+}
