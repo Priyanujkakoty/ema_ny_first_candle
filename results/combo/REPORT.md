@@ -116,9 +116,26 @@ Monthly P&L at 0.15% risk (static $7.50/R, not compounding): **131 months, 123 p
 
 ## 4. Prop results — AquaFunded 2-Step Pro
 
-Rules: Phase 1 +10%, Phase 2 +5% (from the Phase 1 closing balance), daily drawdown 5%
-of the higher of balance/equity at 00:00 UTC, max drawdown **10% trailing** with the
-floor fixed at peak − $500 on a $5,000 account. Floating P&L counts. No time limit.
+Rules, quoted from the 2-Step Pro article (verified 2026-11-20):
+
+> The maximum daily loss allowed is 5% of your previous days ending balance/equity high.
+> This is calculated daily at 00:00 UTC, based on the higher value of either your account
+> balance or account equity at that time.
+
+> A 10% trailing drawdown means your account equity must not fall more than 10% from your
+> highest balance / equity. It includes both realised and unrealised losses and is
+> recalculated as your account value increases.
+
+So the **daily limit is not trailing**. It resets every 00:00 UTC to a fixed reference:
+the higher of balance or equity at that instant. Only the 10% total drawdown trails, with
+the floor fixed at peak − $500 on a $5,000 account (10% of the initial balance, never
+moving down). The article's own worked example: peak $105,000 → floor $95,000; balance
+drops to $103,000 → floor stays $95,000; balance rises to $108,000 → floor $98,000.
+
+Phase 1 +10%, Phase 2 +5% (from the Phase 1 closing balance). Floating P&L counts in both
+limits. No time limit, no minimum trading days in evaluation. The 50% consistency rule
+applies only to funded payouts (and only to purchases on or after 2026-08-31; 25% before).
+Funded accounts need 3 days of at least +0.5% each before a payout.
 
 Historical — a challenge started on every trading day (2,816 starts):
 
@@ -243,6 +260,10 @@ Do not run 0.25% or 0.50% on a single attempt. They are only useful if the plan 
 - Phase 2 is modelled from the Phase 1 ending balance; the reset variant is saved.
 - Trailing drawdown is modelled on intraday equity highs (conservative). The
   closed-balance variant raises pass rates by 1.4–6 points.
+- The daily limit is modelled as a fixed 00:00 UTC reference that resets each day, not a
+  trail, matching the article. Because every position is flat by 16:00 ET (20:00–21:00
+  UTC), balance equals equity at the 00:00 UTC reset, so the "higher of balance/equity"
+  clause never changes the number.
 - Rolling-start historical results are path-specific. Monte Carlo is the planning number.
 - Nine concurrent positions at 0.10–0.15% risk each is 0.9–1.35% of open risk. That is
   within the rules but it is a real operational load; an execution failure on one leg
