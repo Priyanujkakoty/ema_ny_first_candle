@@ -41,7 +41,24 @@ Rules: Phase 1 +10%, Phase 2 +5%, daily drawdown 5% of the higher of balance/equ
 00:00 UTC, max drawdown 10% **trailing** (floor = peak − $500 on a $5,000 account), no
 time limit, no minimum trading days. See `results/prop/rules_verified.json`.
 
-Monte Carlo, 20,000 runs, whole trading days resampled:
+Monte Carlo, 20,000 runs, whole trading days resampled.
+
+**5 pairs (EURUSD, GBPUSD, USDJPY, AUDJPY, GBPJPY)** — recommended:
+
+| Risk/trade | Historical pass | MC pass | Median calendar days |
+|---|---|---|---|
+| **0.100%** | **100.0%** | **98.3%** | **38** |
+| 0.125% | 93.4% | 94.1% | 30 |
+| 0.150% | 85.2% | 86.9% | 25 |
+| 0.200% | 71.5% | 68.6% | 17 |
+| 0.250% | 51.6% | 50.5% | 13 |
+
+The 5-pair book makes **5.763 R/day with a −64.9R drawdown**, against 3.159 R/day and
+−76.1R for 3 pairs. More profit for less drawdown, which is why the same 0.10% risk
+finishes in 38 days instead of 68. Out of sample 2011–2015 it averages +0.444R per trade
+versus +0.445 in the selection period.
+
+**3 pairs (EURUSD, GBPUSD, AUDJPY)**:
 
 | Risk/trade | Historical pass | MC pass | Max-DD breach | Median calendar days |
 |---|---|---|---|---|
@@ -62,6 +79,36 @@ defensible setting — 76.1R x 0.125% = 9.5%, just inside the 10% limit — at 9
 Compared with the NY-ORB-only portfolio, at the same 0.10% risk the combined book passes
 in 68 days instead of 182 with a higher pass probability. At the same 95% MC pass
 probability it is 4.0x faster (33 vs 132 trading days).
+
+## Speed limit
+
+Calendar days are not a free choice:
+
+```
+calendar days = 15.5% x 1.405 x DD_R / (10% x R_per_day)
+```
+
+`15.5%` is the total target, `1.405` is weekends, `DD_R` is the drawdown the trailing
+floor permits. Because risk is capped at `10% / DD_R`, only more R per day at the same
+drawdown buys speed.
+
+A **20-calendar-day pass needs 1.09% per trading day**, which is 0.189% risk on the
+5-pair book — 1.8x the safe cap. Measured over every historical start:
+
+| Risk | Pass | Median days | P(pass ≤ 20 d) | E[days to a pass] |
+|---|---|---|---|---|
+| 0.100% | 98.8% | 39 | 9.6% | 43 |
+| 0.150% | 87.9% | 25 | 28.2% | 32 |
+| 0.200% | 68.7% | 18 | 41.8% | 27 |
+| 0.250% | 53.2% | 14 | 44.2% | 25 |
+| 0.300% | 37.9% | 10 | 35.8% | 24 |
+
+The probability peaks at **44%** and expected time never drops below 24 days. 20 days is
+a coin flip at any setting, and chasing it makes the expected finish later because
+failed attempts burn the clock too.
+
+Risk ramps (raising risk as the target approaches) were also tested and rejected: every
+schedule lost to flat risk at the same base, 92.6% versus 99.7% Monte Carlo pass.
 
 Full report: [`results/combo/REPORT.md`](results/combo/REPORT.md).
 
@@ -98,6 +145,10 @@ prop_sim_portfolio.py     AquaFunded 2-Step Pro simulator (NY-ORB portfolio)
 prop_sim_combo.py         same simulator on the combined portfolio
 prop_sim_orb.py           single-pair version
 compare.py                NY-ORB vs combined, side by side
+risk_sizing.py            rule-to-risk caps, exact zero-failure cap
+combo_streaks.py          losing-streak distribution, observed and Monte Carlo
+risk_ramp.py              risk schedules vs flat risk, at equal pass probability
+deadline.py               P(pass within N calendar days) by risk level
 improve.py, robustness.py one-factor grid and multi-window robustness
 results/                  trades, summaries, reports, Monte Carlo output
 ```

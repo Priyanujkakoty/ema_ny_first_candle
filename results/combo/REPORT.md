@@ -271,7 +271,80 @@ Do not run 0.25% or 0.50% on a single attempt. They are only useful if the plan 
 - 2016–2026 is still one broad regime. Every year is positive, which is encouraging,
   but it is not a guarantee.
 
-## 8. Files
+## 9. Speed: the 5-pair book and the 20-day question
+
+Speed is not a free parameter. It is fixed by arithmetic:
+
+```
+calendar days = 15.5% x 1.405 x DD_R / (10% x R_per_day)
+```
+
+`15.5%` is the total target (10% Phase 1, then 5% of the Phase 1 close), `1.405` is
+calendar days per trading day (weekends), and `DD_R` is the drawdown in R that the
+trailing floor permits. Since risk is capped at `10% / DD_R`, the only lever that does
+not buy speed with failure probability is **raising R per day without raising DD_R**.
+
+Running the same three families on all five available pairs does exactly that:
+
+| | 3 pairs | 5 pairs |
+|---|---|---|
+| Trades (2016–2026) | 21,925 | 36,463 |
+| R per day | 3.159 | **5.763** |
+| Max DD | −76.1R | **−64.9R** |
+| Calmar | 116.8 | **250.1** |
+| t | 20.81 | 28.31 |
+| Trades per day | 7.79 | 12.95 |
+| Max concurrent | 9 | 15 |
+| Worst simultaneous float | −5.04R | −6.93R |
+| Median days @ 0.10% | 68 | **38** |
+
+More R for less drawdown. USDJPY and GBPJPY diversify the existing legs (pair
+correlations 0.08–0.32). Out of sample, 2011–2015: 16,873 trades, +7,488.7R, −64.0R,
+t = 18.65, average R **+0.444** versus +0.445 in the selection period. The full
+2011–2026 run is 53,336 trades, +23,716.2R, −64.9R, t = 33.88.
+
+Prop results on the 5-pair book:
+
+| Risk | Hist pass | MC pass | Median days | Max daily DD |
+|---|---|---|---|---|
+| **0.100%** | **100.0%** | **98.3%** | **38** | $39 |
+| 0.125% | 93.4% | 94.1% | 30 | $50 |
+| 0.150% | 85.2% | 86.9% | 25 | $60 |
+| 0.200% | 71.5% | 68.6% | 17 | $78 |
+| 0.250% | 51.6% | 50.5% | 13 | $95 |
+
+### The 20-day target
+
+20 calendar days is 14.2 trading days, so the book must return 1.09% per trading day.
+At 5.763 R/day that needs **0.189% risk per trade** — 1.8x the safe cap. Measured
+across every historical start (`deadline.py`):
+
+| Risk | Pass | Median days | **P(pass ≤ 20 d)** | E[days to a pass] |
+|---|---|---|---|---|
+| 0.100% | 98.8% | 39 | 9.6% | 43 |
+| 0.150% | 87.9% | 25 | 28.2% | 32 |
+| 0.200% | 68.7% | 18 | 41.8% | 27 |
+| 0.250% | 53.2% | 14 | **44.2%** | 25 |
+| 0.300% | 37.9% | 10 | 35.8% | 24 |
+
+`P(≤20 d)` is the probability the whole challenge, both phases, finishes inside 20
+calendar days. It peaks at **44%**. `E[days]` never falls below 24, so raising risk to
+beat the deadline makes the expected finish *later*, not sooner: failures burn the
+clock too.
+
+Conclusion: **20 days is a coin flip, not a plan.** The 5-pair book at 0.10% passes in
+38 days with 98.3% Monte Carlo reliability. At 0.20% it passes in 18 days with 68.6%.
+There is no setting that gives both.
+
+### Risk ramps are rejected
+
+Risk scaled with progress toward the target (`ramp 0.100% k=2`, `hyper 0.075% k=.85`,
+and variants) was tested at equal base risk. Every schedule lost: 92.6% Monte Carlo
+pass versus 99.7% for flat risk at the same base, and the steep variants were worse
+still. The failure risk is not concentrated early enough to pay for the ramp. Flat risk
+per trade remains optimal.
+
+## 10. Files
 
 `results/combo/`
 - `summary.json` — portfolio, per-strategy, per-pair, correlations, yearly
@@ -283,9 +356,12 @@ Do not run 0.25% or 0.50% on a single attempt. They are only useful if the plan 
 - `prop/historical_phase2_reset.csv`
 - `prop/monthly_*.csv`
 
+`results/combo/wide/` — the 5-pair book, same layout (36,463 trades).
+`results/combo/wide_2011/` — the 5-pair book from 2011 (53,336 trades).
 `results/combo/eurusd_gbpusd/` — the 2-pair variant, same layout.
 `results/lab/screen.json`, `results/lab/validation.json` — family screen and validation.
 
 Scripts: `lab.py` (engines), `screen.py`, `validate.py`, `combo.py`,
 `prop_sim_combo.py`, `combo_stats.py`, `combo_subsets.py`, `combo_window.py`,
-`combo_margin.py`, `combo_monthly.py`, `compare.py`.
+`combo_margin.py`, `combo_monthly.py`, `risk_sizing.py`, `combo_streaks.py`,
+`risk_ramp.py`, `deadline.py`, `compare.py`.
