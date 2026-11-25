@@ -1,0 +1,4 @@
+# Runtime deps for the ema_ny_first_candle lab.
+# Python >= 3.10 required (uses zoneinfo + PEP 604 union types).
+numpy>=1.24
+pandas>=2.0
